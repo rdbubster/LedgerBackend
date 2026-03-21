@@ -42,7 +42,7 @@ public class LedgerEntry {
         this.type=type;
         this.createdAt=Instant.now();
     }
-    protected LedgerEntry(){}// this thing we need to look at up as it is something for hibernate.
+    protected LedgerEntry(){}// this thing we need to look at up as it is something for hibernate as it does not hinder the
 
     public Long getId(){
         return id;

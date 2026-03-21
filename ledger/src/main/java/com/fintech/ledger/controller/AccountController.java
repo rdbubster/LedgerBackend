@@ -1,9 +1,6 @@
 package com.fintech.ledger.controller;
 
-import com.fintech.ledger.dto.AccountRequest;
-import com.fintech.ledger.dto.AccountResponse;
-import com.fintech.ledger.dto.CreditRequest;
-import com.fintech.ledger.dto.LedgerEntryResponse;
+import com.fintech.ledger.dto.*;
 import com.fintech.ledger.model.Account;
 import com.fintech.ledger.model.LedgerEntry;
 import com.fintech.ledger.service.AccountService;
@@ -63,6 +60,19 @@ public class AccountController {
     public ResponseEntity<BigDecimal> balance(@PathVariable Long id){
         BigDecimal balance=ledgerService.getBalance(id);
         return ResponseEntity.ok(balance);
+    }
+
+    @PostMapping("/{id}/debit")
+    public ResponseEntity<LedgerEntryResponse> debit(@PathVariable Long id,@Valid @RequestBody DebitRequest request){
+LedgerEntry entry=ledgerService.debit(id,request.getAmount(),request.getReferenceId());
+LedgerEntryResponse response=new LedgerEntryResponse(
+        entry.getId(),
+        entry.getAmount(),
+        entry.getType(),
+        entry.getReferenceId(),
+        entry.getCreatedAt()
+);
+return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 
