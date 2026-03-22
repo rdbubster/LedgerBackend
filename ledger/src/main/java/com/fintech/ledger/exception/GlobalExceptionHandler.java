@@ -33,6 +33,12 @@ public class GlobalExceptionHandler {
                 .body(errorBody("INVALID_REQUEST", ex.getMessage()));
     }
 
+    @ExceptionHandler(DuplicateOperationException.class)
+    public ResponseEntity<Map<String,Object>> handleDuplicate(DuplicateOperationException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(errorBody("DUBLICATE_OPERATION", ex.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationFailed(
             MethodArgumentNotValidException ex) {

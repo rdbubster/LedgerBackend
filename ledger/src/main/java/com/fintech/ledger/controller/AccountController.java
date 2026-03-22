@@ -4,6 +4,7 @@ import com.fintech.ledger.dto.*;
 import com.fintech.ledger.model.Account;
 import com.fintech.ledger.model.LedgerEntry;
 import com.fintech.ledger.service.AccountService;
+import com.fintech.ledger.exception.DuplicateOperationException;
 import com.fintech.ledger.service.LedgerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.function.BiFunction;
 
 @RestController
 @RequestMapping("/account")
@@ -43,7 +43,7 @@ public class AccountController {
 
     }
     @PostMapping("/{id}/credit")
-    public ResponseEntity<LedgerEntryResponse> credit(@PathVariable Long id ,@Valid @RequestBody CreditRequest request){
+    public ResponseEntity<LedgerEntryResponse> credit(@PathVariable Long id ,@Valid @RequestBody CreditRequest request) throws DuplicateOperationException {
         LedgerEntry entry= ledgerService.credit(id,request.getAmount(),request.getReferenceId());
         LedgerEntryResponse response=new LedgerEntryResponse(
                 entry.getId(),

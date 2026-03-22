@@ -35,11 +35,11 @@ public class LedgerEntry {
     @Column(nullable = false,updatable = false)
     private Instant createdAt;
 
-    public LedgerEntry(Account account,BigDecimal amount,String referenceId,LedgerEntryType type){
+    public LedgerEntry(Account account,BigDecimal amount,LedgerEntryType type,String referenceId){
         this.account=account;
         this.amount=amount;
-        this.referenceId=referenceId;
         this.type=type;
+        this.referenceId=referenceId;
         this.createdAt=Instant.now();
     }
     protected LedgerEntry(){}// this thing we need to look at up as it is something for hibernate as it does not hinder the
