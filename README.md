@@ -126,7 +126,7 @@ it avoids unnecessary database work.
 
 **Prerequisites:** Java 17+, PostgreSQL, Maven
 
-1. Create a PostgreSQL database named `ledger_db`
+1. Create a PostgreSQL database named "ledgerdb"
 2. Clone the repository
 3. Update `src/main/resources/application.properties` with your
    database credentials
