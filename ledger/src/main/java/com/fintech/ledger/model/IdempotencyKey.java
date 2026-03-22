@@ -15,7 +15,7 @@ public class IdempotencyKey {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "account",nullable = false)
+    @Column(name = "account_id",nullable = false)
     private Long accountId;
 
     @Column(name ="reference_id",nullable = false )
