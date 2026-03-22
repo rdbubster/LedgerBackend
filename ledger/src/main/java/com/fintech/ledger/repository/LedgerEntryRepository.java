@@ -1,6 +1,8 @@
 package com.fintech.ledger.repository;
 
 import com.fintech.ledger.model.LedgerEntry;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,5 +23,7 @@ WHERE le.account.id=:accountId
     )
     BigDecimal calculateBalance(@Param("accountId")Long accountId);
 
+
+    Page<LedgerEntry> findByAccountId(Long accountId, Pageable pageable);
 
 }

@@ -7,9 +7,11 @@ import com.fintech.ledger.service.AccountService;
 import com.fintech.ledger.exception.DuplicateOperationException;
 import com.fintech.ledger.service.LedgerService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.fintech.ledger.dto.LedgerEntryResponse;
 
 import java.math.BigDecimal;
 
@@ -43,7 +45,7 @@ public class AccountController {
 
     }
     @PostMapping("/{id}/credit")
-    public ResponseEntity<LedgerEntryResponse> credit(@PathVariable Long id ,@Valid @RequestBody CreditRequest request) throws DuplicateOperationException {
+    public ResponseEntity<LedgerEntryResponse> credit(@PathVariable Long id ,@Valid @RequestBody CreditRequest request) {
         LedgerEntry entry= ledgerService.credit(id,request.getAmount(),request.getReferenceId());
         LedgerEntryResponse response=new LedgerEntryResponse(
                 entry.getId(),
@@ -53,7 +55,7 @@ public class AccountController {
                 entry.getCreatedAt()
 
         );
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}/balance")
@@ -64,19 +66,38 @@ public class AccountController {
 
     @PostMapping("/{id}/debit")
     public ResponseEntity<LedgerEntryResponse> debit(@PathVariable Long id,@Valid @RequestBody DebitRequest request){
-LedgerEntry entry=ledgerService.debit(id,request.getAmount(),request.getReferenceId());
-LedgerEntryResponse response=new LedgerEntryResponse(
-        entry.getId(),
-        entry.getAmount(),
-        entry.getType(),
-        entry.getReferenceId(),
-        entry.getCreatedAt()
-);
-return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        LedgerEntry entry=ledgerService.debit(id,request.getAmount(),request.getReferenceId());
+        LedgerEntryResponse response=new LedgerEntryResponse(
+                entry.getId(),
+                entry.getAmount(),
+                entry.getType(),
+                entry.getReferenceId(),
+                entry.getCreatedAt()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping("/{id}/transactions")
+    public ResponseEntity<Page<LedgerEntryResponse>> getTransactions(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
-
-
-
+        Page<LedgerEntry> entries = ledgerService.getTransactions(id, page, size);
+        Page<LedgerEntryResponse> response = entries.map(entry -> new LedgerEntryResponse(
+                entry.getId(),
+                entry.getAmount(),
+                entry.getType(),
+                entry.getReferenceId(),
+                entry.getCreatedAt()
+        ));
+        return ResponseEntity.ok(response);
+    }
 }
+
+
+
+
+
+
+

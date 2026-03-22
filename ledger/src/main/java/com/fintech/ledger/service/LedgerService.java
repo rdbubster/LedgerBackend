@@ -10,6 +10,10 @@ import com.fintech.ledger.model.LedgerEntryType;
 import com.fintech.ledger.repository.AccountRepository;
 import com.fintech.ledger.repository.IdempotencyKeyRepository;
 import com.fintech.ledger.repository.LedgerEntryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,4 +92,12 @@ public class LedgerService {
 
 
     }
+    @Transactional(readOnly = true)
+    public Page<LedgerEntry> getTransactions(Long accountId, int page, int size){
+        accountRepository.findById(accountId).orElseThrow(()->new AccountNotFoundException(accountId));
+
+        Pageable pageable= PageRequest.of(page,size, Sort.by("createdAt").descending());
+        return ledgerEntryRepository.findByAccountId(accountId,pageable);
+    }
+
 }
